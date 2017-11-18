@@ -18,4 +18,7 @@ public class HttpParams {
     public static final String KEY_LONG = "lon";
     public static final String KEY_APP_ID = "APPID";
 
+    public static final String KEY_UNIT = "units";
+    public static final String UNIT_METRIC = "metric";
+
 }

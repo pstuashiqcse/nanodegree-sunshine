@@ -5,24 +5,24 @@
     android:layout_height="match_parent"
     tools:context="com.codelab.sunshine.activity.MainActivity">
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
-
-        <TextView
-            android:id="@+id/tv_weather_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/main_text_padding"
-            android:textSize="@dimen/main_text_size" />
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:layout_margin="8dp" />
 
     <ProgressBar
         android:id="@+id/pd_loading_indicator"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_data"
+        android:visibility="gone" />
 
 </FrameLayout>

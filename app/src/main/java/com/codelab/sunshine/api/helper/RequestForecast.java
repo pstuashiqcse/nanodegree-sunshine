@@ -33,6 +33,7 @@ public class RequestForecast extends BaseHttp {
         hashMap.put(HttpParams.KEY_LAT, latitude);
         hashMap.put(HttpParams.KEY_LONG, longitude);
         hashMap.put(HttpParams.KEY_APP_ID, HttpParams.API_KEY);
+        hashMap.put(HttpParams.KEY_UNIT, HttpParams.UNIT_METRIC);
 
         setParams(hashMap, GET);
     }
