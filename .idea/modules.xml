@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nanodegree.iml" filepath="$PROJECT_DIR$/nanodegree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nanodegree-sunshine.iml" filepath="$PROJECT_DIR$/nanodegree-sunshine.iml" />
     </modules>
   </component>
 </project>
