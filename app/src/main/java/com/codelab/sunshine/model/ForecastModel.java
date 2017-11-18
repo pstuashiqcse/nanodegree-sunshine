@@ -11,16 +11,19 @@ public class ForecastModel {
     private String temp;
     private String tempMin;
     private String tempMax;
+    private String icon;
 
     public ForecastModel(String day, String condition,
                          String description, String temp,
-                         String tempMin, String tempMax) {
+                         String tempMin, String tempMax,
+                         String icon) {
         this.day = day;
         this.condition = condition;
         this.description = description;
         this.temp = temp;
         this.tempMin = tempMin;
         this.tempMax = tempMax;
+        this.icon = icon;
     }
 
     public String getDay() {
@@ -45,5 +48,9 @@ public class ForecastModel {
 
     public String getTempMax() {
         return tempMax;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }

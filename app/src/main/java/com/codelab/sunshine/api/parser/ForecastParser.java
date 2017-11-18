@@ -34,13 +34,14 @@ public class ForecastParser {
                 JSONObject weatherJson = weatherJsonArray.getJSONObject(0);
                 String condition = weatherJson.getString("main");
                 String description = weatherJson.getString("description");
+                String icon = weatherJson.getString("icon");
 
                 JSONObject mainJson = listData.getJSONObject("main");
                 String temp = mainJson.getString("temp");
                 String tempMin = mainJson.getString("temp_min");
                 String tempMax = mainJson.getString("temp_max");
 
-                arrayList.add(new ForecastModel(date, condition, description, temp, tempMin, tempMax));
+                arrayList.add(new ForecastModel(date, condition, description, temp, tempMin, tempMax, icon));
             }
 
             return arrayList;

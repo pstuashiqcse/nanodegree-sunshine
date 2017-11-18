@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         initVars();
         initViews();
         initFunctionality();
+        initListeners();
         loadWeatherData();
 
     }
@@ -63,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new ForecastAdapter(mContext, arrayList);
         recyclerView.setAdapter(mAdapter);
 
+    }
+
+    private void initListeners() {
+        mAdapter.setItemClickListener(new ForecastAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+
+            }
+        });
     }
 
     private void loadWeatherData() {

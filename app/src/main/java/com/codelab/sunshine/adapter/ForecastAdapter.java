@@ -73,21 +73,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         holder.tvDescription.setText(arrayList.get(position).getCondition() +", "+ arrayList.get(position).getDescription());
         holder.tvMaxTemp.setText(arrayList.get(position).getTempMax()+"°C");
         holder.tvMinTemp.setText(arrayList.get(position).getTempMin()+"°C");
+        holder.ivIndicatorIcon.setImageResource(getIconRes(arrayList.get(position).getIcon()));
 
-        // TODO: icon management: https://openweathermap.org/weather-conditions
-        /*String imageUrl = dataList.get(position).getImage();
-        if (imageUrl != null) {
-            Glide.with(mActivity)
-                    .load(imageUrl)
-                    .error(R.drawable.ic_user)
-                    .crossFade()
-                    .transform(new CircleTransform(mActivity.getApplicationContext()))
-                    .into(holder.userImage);
-        } else {
-            holder.userImage.setImageResource(R.drawable.ic_user);
-        }*/
     }
-
 
     @Override
     public int getItemCount() {
@@ -96,6 +84,30 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
     public interface ItemClickListener {
         public void onItemClick(View v, int position);
+    }
+
+    private static int getIconRes(String iconCode) {
+        int finalIconCode = -1;
+        if(iconCode.equals("01d") || iconCode.equals("01n")) {
+            finalIconCode = R.drawable.ic_clear_sky;
+        } else if (iconCode.equals("02d") || iconCode.equals("02n")) {
+            finalIconCode = R.drawable.ic_few_cloud;
+        } else if (iconCode.equals("03d") || iconCode.equals("03n")) {
+            finalIconCode = R.drawable.ic_scattered_clouds;
+        } else if (iconCode.equals("04d") || iconCode.equals("04n")) {
+            finalIconCode = R.drawable.ic_broken_clouds;
+        } else if (iconCode.equals("05d") || iconCode.equals("05n")) {
+            finalIconCode = R.drawable.ic_shower_rain;
+        } else if (iconCode.equals("06d") || iconCode.equals("06n")) {
+            finalIconCode = R.drawable.ic_rain;
+        } else if (iconCode.equals("07d") || iconCode.equals("07n")) {
+            finalIconCode = R.drawable.ic_thunderstorm;
+        } else if (iconCode.equals("08d") || iconCode.equals("08n")) {
+            finalIconCode = R.drawable.ic_snow;
+        } else if (iconCode.equals("09d") || iconCode.equals("09n")) {
+            finalIconCode = R.drawable.ic_mist;
+        }
+        return finalIconCode;
     }
 
 }
