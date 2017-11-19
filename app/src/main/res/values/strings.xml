@@ -2,4 +2,8 @@
     <string name="app_name">Sunshine</string>
     <string name="no_internet">Please connect to internet.</string>
     <string name="no_data">No data!</string>
+
+    <string name="location_disabled">Location service has been disabled</string>
+    <string name="turn_on_gps">Turn on GPS</string>
+    <string name="settings">Settings</string>
 </resources>

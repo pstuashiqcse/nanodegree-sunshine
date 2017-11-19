@@ -1,8 +1,11 @@
 package com.codelab.sunshine.activity;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,6 +17,8 @@ import com.codelab.sunshine.adapter.ForecastAdapter;
 import com.codelab.sunshine.api.helper.RequestForecast;
 import com.codelab.sunshine.http.ResponseListener;
 import com.codelab.sunshine.model.ForecastModel;
+import com.codelab.sunshine.utility.LocationProviderTools;
+import com.codelab.sunshine.utility.PermissionUtils;
 import com.codelab.sunshine.utility.Utils;
 
 import java.util.ArrayList;
@@ -29,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ForecastModel> arrayList;
     private ForecastAdapter mAdapter;
 
+    private LocationProviderTools locationProviderTools;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initFunctionality();
         initListeners();
-        loadWeatherData();
 
     }
 
@@ -55,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFunctionality() {
-        if(!Utils.isNetworkAvailable(mContext)) {
+
+        locationProviderTools = new LocationProviderTools(mContext);
+
+        if (!Utils.isNetworkAvailable(mContext)) {
             Utils.showToast(mContext, getString(R.string.no_internet));
         }
 
@@ -75,13 +84,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadWeatherData() {
+    private void loadWeatherData(String latitude, String longitude) {
         pbLoadingIndicator.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         tvErrorMessage.setVisibility(View.GONE);
 
         RequestForecast requestForecast = new RequestForecast(mContext);
-        requestForecast.buildParams("23.810332", "90.412518");
+        requestForecast.buildParams(latitude, longitude);
         requestForecast.setResponseListener(new ResponseListener() {
             @Override
             public void onResponse(Object data) {
@@ -90,9 +99,11 @@ public class MainActivity extends AppCompatActivity {
                     if (!allData.isEmpty()) {
                         arrayList.addAll(allData);
                     } else {
+                        tvErrorMessage.setVisibility(View.VISIBLE);
                         tvErrorMessage.setText(getString(R.string.no_data));
                     }
                 } else {
+                    tvErrorMessage.setVisibility(View.VISIBLE);
                     tvErrorMessage.setText(getString(R.string.no_data));
                 }
                 pbLoadingIndicator.setVisibility(View.GONE);
@@ -100,6 +111,68 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestForecast.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadLocation();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PermissionUtils.REQUEST_LOCATION: {
+                if (PermissionUtils.isPermissionResultGranted(grantResults)) {
+                    loadLocation();
+                }
+            }
+        }
+    }
+
+
+    private void loadLocation() {
+        if (locationProviderTools.isGpsEnabled()) {
+
+            pbLoadingIndicator.setVisibility(View.VISIBLE);
+            tvErrorMessage.setVisibility(View.GONE);
+
+            locationProviderTools.setLocationChangeListener(new LocationProviderTools.LocationChangeListener() {
+                @Override
+                public void onLocationUpdate(Location location) {
+
+                    if (location != null && location.getLongitude() != 0) {
+                        locationProviderTools.stopUsingGPS();
+                        loadWeatherData(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                    }
+                }
+            });
+            if (PermissionUtils.isPermissionGranted(MainActivity.this, PermissionUtils.LOCATION_PERMISSIONS, PermissionUtils.REQUEST_LOCATION)) {
+
+                Location location = locationProviderTools.getLocation();
+                if (location != null && location.getLongitude() != 0) {
+                    locationProviderTools.stopUsingGPS();
+                    loadWeatherData(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                }
+            } else {
+                pbLoadingIndicator.setVisibility(View.GONE);
+                tvErrorMessage.setVisibility(View.VISIBLE);
+                tvErrorMessage.setText(getString(R.string.no_data));
+            }
+        } else {
+            pbLoadingIndicator.setVisibility(View.GONE);
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText(getString(R.string.location_disabled));
+
+            Snackbar.make(tvErrorMessage, getString(R.string.turn_on_gps), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.settings), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    }).show();
+        }
     }
 
 }
